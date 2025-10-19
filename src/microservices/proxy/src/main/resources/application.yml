@@ -1,0 +1,15 @@
+server:
+  port: ${PORT:8000}
+
+app:
+  monolithUrl: ${MONOLITH_URL:http://localhost:8080}
+  moviesServiceUrl: ${MOVIES_SERVICE_URL:http://localhost:8081}
+  eventsServiceUrl: ${EVENTS_SERVICE_URL:http://localhost:8082}
+  usersServiceUrl: ${USERS_SERVICE_URL:http://localhost:8083}
+  paymentsServiceUrl: ${PAYMENTS_SERVICE_URL:http://localhost:8084}
+  subscriptionsServiceUrl: ${SUBSCRIPTIONS_SERVICE_URL:http://localhost:8085}
+  gradualMigration: ${GRADUAL_MIGRATION:true}
+  moviesMigrationPercent: ${MOVIES_MIGRATION_PERCENT:50}
+  usersMigrationPercent: ${USERS_MIGRATION_PERCENT:0}
+  paymentsMigrationPercent: ${PAYMENTS_MIGRATION_PERCENT:0}
+  subscriptionsMigrationPercent: ${SUBSCRIPTIONS_MIGRATION_PERCENT:0}

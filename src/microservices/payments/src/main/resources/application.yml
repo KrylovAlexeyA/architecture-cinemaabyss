@@ -1,0 +1,9 @@
+server:
+  port: ${PORT:8084}
+
+spring:
+  datasource:
+    url: ${DB_CONNECTION_STRING:jdbc:postgresql://localhost:5432/cinemaabyss}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres_password}
+    driver-class-name: org.postgresql.Driver

@@ -82,6 +82,60 @@ services:
     networks:
       - cinemaabyss-network
 
+  # Users Microservice
+  users-service:
+    build:
+      context: ./src/microservices/users
+      dockerfile: Dockerfile
+    container_name: cinemaabyss-users-service
+    depends_on:
+      - postgres
+    ports:
+      - "8083:8083"
+    environment:
+      PORT: 8083
+      DB_CONNECTION_STRING: jdbc:postgresql://postgres:5432/cinemaabyss
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres_password
+    networks:
+      - cinemaabyss-network
+
+  # Payments Microservice
+  payments-service:
+    build:
+      context: ./src/microservices/payments
+      dockerfile: Dockerfile
+    container_name: cinemaabyss-payments-service
+    depends_on:
+      - postgres
+    ports:
+      - "8084:8084"
+    environment:
+      PORT: 8084
+      DB_CONNECTION_STRING: jdbc:postgresql://postgres:5432/cinemaabyss
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres_password
+    networks:
+      - cinemaabyss-network
+
+  # Subscriptions Microservice
+  subscriptions-service:
+    build:
+      context: ./src/microservices/subscriptions
+      dockerfile: Dockerfile
+    container_name: cinemaabyss-subscriptions-service
+    depends_on:
+      - postgres
+    ports:
+      - "8085:8085"
+    environment:
+      PORT: 8085
+      DB_CONNECTION_STRING: jdbc:postgresql://postgres:5432/cinemaabyss
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres_password
+    networks:
+      - cinemaabyss-network
+
   # Events Microservice
   events-service:
     build:
@@ -109,6 +163,9 @@ services:
       - monolith
       - movies-service
       - events-service
+      - subscriptions-service
+      - payments-service
+      - users-service
     ports:
       - "8000:8000"
     environment:
@@ -118,6 +175,12 @@ services:
       EVENTS_SERVICE_URL: http://events-service:8082
       GRADUAL_MIGRATION: "true"
       MOVIES_MIGRATION_PERCENT: "50"
+      USERS_MIGRATION_PERCENT: "0"
+      USERS_SERVICE_URL: http://users-service:8083
+      PAYMENTS_MIGRATION_PERCENT: "0"
+      PAYMENTS_SERVICE_URL: http://payments-service:8084
+      SUBSCRIPTIONS_MIGRATION_PERCENT: "0"
+      SUBSCRIPTIONS_SERVICE_URL: http://subscriptions-service:8085
     networks:
       - cinemaabyss-network
 
