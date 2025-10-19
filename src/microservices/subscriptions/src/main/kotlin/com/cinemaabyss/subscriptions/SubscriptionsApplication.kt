@@ -4,7 +4,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-class SubscriptionsApplication
+open class SubscriptionsApplication
 
 fun main(args: Array<String>) {
     runApplication<SubscriptionsApplication>(*args)
