@@ -1,0 +1,44 @@
+@startuml CinemaAbyss To-Be Architecture
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+Person(customer, "Пользователь", "Смотрит фильмы через различные устройства")
+
+System_Boundary(cinemaabyss, "Кинобездна") {
+    Container(api_gateway, "API Gateway", "Go", "Единая точка входа для всех клиентов, маршрутизация, аутентификация")
+
+    Container(user_service, "User Service", "Go", "Управление пользователями, профили, аутентификация")
+    Container(movie_service, "Movie Service", "Go", "Каталог фильмов, метаданные, жанры")
+    Container(payment_service, "Payment Service", "Go", "Обработка платежей, транзакции")
+    Container(subscription_service, "Subscription Service", "Go", "Управление подписками, тарифы")
+    Container(recommendation_service, "Recommendation Service", "Python", "Персональные рекомендации")
+
+    ContainerDb(user_db, "User Database", "PostgreSQL", "Пользователи, профили, настройки")
+    ContainerDb(movie_db, "Movie Database", "PostgreSQL", "Фильмы, жанры, метаданные")
+    ContainerDb(payment_db, "Payment Database", "PostgreSQL", "Платежи, транзакции, история")
+    ContainerDb(subscription_db, "Subscription Database", "PostgreSQL", "Подписки, тарифы, статусы")
+
+    Container(message_broker, "Message Broker", "RabbitMQ", "Асинхронная коммуникация между сервисами")
+}
+
+Rel(customer, api_gateway, "Использует API через мобильное приложение/веб/ТВ")
+
+Rel(api_gateway, user_service, "HTTP/REST", "Аутентификация, профили")
+Rel(api_gateway, movie_service, "HTTP/REST", "Получение каталога фильмов")
+Rel(api_gateway, payment_service, "HTTP/REST", "Инициирование платежей")
+Rel(api_gateway, subscription_service, "HTTP/REST", "Управление подписками")
+Rel(api_gateway, recommendation_service, "HTTP/REST", "Получение рекомендаций")
+
+Rel(user_service, user_db, "Чтение/запись", "PostgreSQL")
+Rel(movie_service, movie_db, "Чтение/запись", "PostgreSQL")
+Rel(payment_service, payment_db, "Чтение/запись", "PostgreSQL")
+Rel(subscription_service, subscription_db, "Чтение/запись", "PostgreSQL")
+
+Rel(user_service, message_broker, "Публикация событий", "User events")
+Rel(movie_service, message_broker, "Публикация событий", "Movie events")
+Rel(payment_service, message_broker, "Публикация событий", "Payment events")
+Rel(subscription_service, message_broker, "Публикация событий", "Subscription events")
+Rel(recommendation_service, message_broker, "Подписка на события", "User behavior events")
+
+Rel_R(api_gateway, message_broker, "Мониторинг событий", "Логирование, аналитика")
+
+@enduml
