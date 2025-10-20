@@ -6,13 +6,26 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
 spec:
+  tls:
+  - hosts:
+    - cinemaabyss.example.com
+    secretName: cinemaabyss-tls
   rules:
     - host: cinemaabyss.example.com
       http:
         paths:
-          #дополните конфигурацию для /
-          ...
+          # Основной маршрут через proxy-service для всех API
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: proxy-service
+                port:
+                  number: 8000
+          # Прямой маршрут к events-service для тестирования событий
           - path: /api/events
             pathType: Prefix
             backend:
